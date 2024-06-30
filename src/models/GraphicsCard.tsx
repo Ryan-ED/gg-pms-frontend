@@ -1,4 +1,6 @@
-export interface GraphicsCard {
+import { Product, productFieldLabels, initializeProductFields } from "./Product";
+
+export interface GraphicsCard extends Product {
   productName: string; // The name of the product
   manufacturersWebsite?: string; // Manufacturer's website URL for the product
   additionalInfo?: string; // Additional information or features of the CPU, e.g., "Supports Hyper-Threading"
@@ -15,9 +17,7 @@ export interface GraphicsCard {
 }
 
 export const graphicsCardFieldLabels: Record<keyof GraphicsCard, string> = {
-  productName: 'Product Name',
-  manufacturersWebsite: 'Manufacturer\'s Website',
-  additionalInfo: 'Additional Information',
+  ...productFieldLabels,
 
   chipset: 'Chipset',
   memory: 'Memory',
@@ -31,9 +31,7 @@ export const graphicsCardFieldLabels: Record<keyof GraphicsCard, string> = {
 }
 
 export const initializeGraphicsCardFields = (): GraphicsCard => ({
-  productName: '',
-  manufacturersWebsite: '',
-  additionalInfo: '',
+  ...initializeProductFields,
 
   chipset: '',
   memory: '',
@@ -47,95 +45,41 @@ export const initializeGraphicsCardFields = (): GraphicsCard => ({
 });
 
 export const generateGpuTablePreview = (data: GraphicsCard): string => {
+  const tableRows = Object.keys(data).map((key) => {
+    return `
+      <tr>
+        <th class="w-25">${graphicsCardFieldLabels[key as keyof GraphicsCard]}</th>
+        <td>${data[key as keyof GraphicsCard]}</td>
+      </tr>
+    `;
+  }).join('');
+
   return `
     <div class="text-start">
       <table class="table table-dark table-striped">
-        <tr>
-          <th class="w-25">Product Name</th>
-          <td>${data.productName}</td>
-        </tr>
-        <tr>
-          <th class="w-25">Chipset</th>
-          <td>${data.chipset}</td>
-        </tr>
-        <tr>
-          <th>Memory</th>
-          <td>${data.memory}</td>
-        </tr>
-        <tr>
-          <th>Core Clock</th>
-          <td>${data.coreClock}</td>
-        </tr>
-        <tr>
-          <th>Boost Clock</th>
-          <td>${data.boostClock}</td>
-        </tr> 
-        <tr>
-          <th>TDP</th>
-          <td>${data.tdp}</td>
-        </tr>
-        <tr>
-          <th>Outputs</th>
-          <td>${data.outputs}</td>
-        </tr>
-        <tr>
-          <th>Length</th>
-          <td>${data.length}</td>
-        </tr>
-        <tr>
-          <th>Power Connectors</th>
-          <td>${data.powerConnectors}</td>
-        </tr>
-        <tr>
-          <th>Manufacturer</th>
-          <td>${data.manufacturer}</td>
-        </tr>
+        ${tableRows}
       </table>
     </div>
   `;
 }
 
 export const generateGpuHtmlTableTemplate = (data: GraphicsCard): string => {
-  const table = `
-    <table style="width: 65%; text-align: left;">
+  const tableRows = Object.keys(data).map((key) => {
+    if (key === 'productName' || key === 'manufacturersWebsite' || key === 'additionalInfo') return '';
+    return `
       <tr>
-        <th style="width: 30%;">Socket Type</td>
-        <td>${data.chipset}</td>
+        <th style="width: 30%;">${graphicsCardFieldLabels[key as keyof GraphicsCard]}</th>
+        <td>${data[key as keyof GraphicsCard]}</td>
       </tr>
-      <tr>
-        <th>Memory</td>
-        <td>${data.memory}</td>
-      </tr>
-      <tr>
-        <th>Core Clock</td>
-        <td>${data.coreClock}</td>
-      </tr>
-      <tr>
-        <th>Boost Clock</td>
-        <td>${data.boostClock}</td>
-      </tr>
-      <tr>
-        <th>TDP</td>
-        <td>${data.tdp}</td>
-      </tr>
-      <tr>
-        <th>Outputs</td>
-        <td>${data.outputs}</td>
-      </tr>
-      <tr>
-        <th>Length</td>
-        <td>${data.length}</td>
-      </tr>
-      <tr>
-        <th>Power Connectors</td>
-        <td>${data.powerConnectors}</td>
-      </tr>
-      <tr>
-        <th>Manufacturer</td>
-        <td>${data.manufacturer}</td>
-      </tr>
-    </table>
-  `;
+    `;
+  }).join('');
 
-  return table;
+  return `
+    <h3>Tech specs:</h3>
+    <table style="width: 65%; text-align: left;">
+      ${tableRows}
+      </table>
+      ${data.additionalInfo && `<p>${data.additionalInfo}</p>`}
+      ${data.manufacturersWebsite && `<p><a href="${data.manufacturersWebsite}" target="_blank">Click here for the manufacturer's website</a></p>`}
+    `;
 };

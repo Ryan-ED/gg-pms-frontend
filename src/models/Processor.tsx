@@ -1,8 +1,6 @@
-export interface Processor {
-  productName: string; // The name of the product
-  manufacturersWebsite?: string; // Manufacturer's website URL for the product
-  additionalInfo?: string; // Additional information or features of the CPU, e.g., "Supports Hyper-Threading"
+import { Product, initializeProductFields, productFieldLabels } from "./Product";
 
+export interface Processor extends Product {
   socketType: string; // The socket type the CPU is compatible with, e.g., LGA 1200, AM4
   processorFamily: string; // The family of processors, e.g., Intel Core i7, AMD Ryzen 5
   numberOfCores: string; // The number of cores the CPU has, e.g., 8
@@ -14,9 +12,7 @@ export interface Processor {
 }
 
 export const processorFieldLabels: Record<keyof Processor, string> = {
-  productName: 'Product Name',
-  manufacturersWebsite: 'Manufacturer\'s Website',
-  additionalInfo: 'Additional Information',
+  ...productFieldLabels,
 
   socketType: 'Socket Type',
   processorFamily: 'Processor Family',
@@ -29,9 +25,7 @@ export const processorFieldLabels: Record<keyof Processor, string> = {
 };
 
 export const initializeProcessorFields = (): Processor => ({
-  productName: '',
-  manufacturersWebsite: '',
-  additionalInfo: '',
+  ...initializeProductFields,
 
   socketType: '',
   processorFamily: '',
@@ -44,87 +38,41 @@ export const initializeProcessorFields = (): Processor => ({
 });
 
 export const generateCpuTablePreview = (data: Processor): string => {
+  const tableRows = Object.keys(data).map((key) => {
+    return `
+      <tr>
+        <th class="w-25">${processorFieldLabels[key as keyof Processor]}</th>
+        <td>${data[key as keyof Processor]}</td>
+      </tr>
+    `;
+  }).join('');
+
   return `
     <div class="text-start">
       <table class="table table-dark table-striped">
-        <tr>
-          <th class="w-25">Socket Type</th>
-          <td>${data.productName}</td>
-        </tr>
-        <tr>
-          <th class="w-25">Socket Type</th>
-          <td>${data.socketType}</td>
-        </tr>
-        <tr>
-          <th>Processor Family</th>
-          <td>${data.processorFamily}</td>
-        </tr>
-        <tr>
-          <th>Number of Cores</th>
-          <td>${data.numberOfCores}</td>
-        </tr>
-        <tr>
-          <th>Base Clock Speed</th>
-          <td>${data.baseClockSpeed}</td>
-        </tr>
-        <tr>
-          <th>Boost Clock Speed</th>
-          <td>${data.boostClockSpeed}</td>
-        </tr>
-        <tr>
-          <th>Cache Size</th>
-          <td>${data.cacheSize}</td>
-        </tr>
-        <tr>
-          <th>TDP</th>
-          <td>${data.tdp}</td>
-        </tr>
-        <tr>
-          <th>Integrated Graphics</th>
-          <td>${data.integratedGraphics}</td>
-        </tr>
+        ${tableRows}
       </table>
     </div>
-  `;
+  `
 }
 
 export const generateCpuHtmlTableTemplate = (data: Processor): string => {
-  const table = `
-    <table style="width: 65%; text-align: left;">
+  const tableRows = Object.keys(data).map((key) => {
+    if (key === 'productName' || key === 'manufacturersWebsite' || key === 'additionalInfo') return '';
+    return `
       <tr>
-        <th style="width: 30%;">Socket Type</td>
-        <td>${data.socketType}</td>
+        <th style="width: 30%;">${processorFieldLabels[key as keyof Processor]}</th>
+        <td>${data[key as keyof Processor]}</td>
       </tr>
-      <tr>
-        <th>Processor Family</td>
-        <td>${data.processorFamily}</td>
-      </tr>
-      <tr>
-        <th>Number of Cores</td>
-        <td>${data.numberOfCores}</td>
-      </tr>
-      <tr>
-        <th>Base Clock Speed</td>
-        <td>${data.baseClockSpeed}</td>
-      </tr>
-      <tr>
-        <th>Boost Clock Speed</td>
-        <td>${data.boostClockSpeed}</td>
-      </tr>
-      <tr>
-        <th>Cache Size</td>
-        <td>${data.cacheSize}</td>
-      </tr>
-      <tr>
-        <th>TDP</td>
-        <td>${data.tdp}</td>
-      </tr>
-      <tr>
-        <th>Integrated Graphics</td>
-        <td>${data.integratedGraphics}</td>
-      </tr>
-    </table>
-  `;
+    `;
+  }).join('');
 
-  return table;
+  return `
+    <h3>Tech specs:</h3>
+    <table style="width: 65%; text-align: left;">
+      ${tableRows}
+    </table>
+    ${data.additionalInfo && `<p>${data.additionalInfo}</p>`}
+    ${data.manufacturersWebsite && `<p><a href="${data.manufacturersWebsite}" target="_blank">Click here for the manufacturer's website</a></p>`}
+  `;
 };
