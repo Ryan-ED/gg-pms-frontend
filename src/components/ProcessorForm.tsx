@@ -1,19 +1,5 @@
 import React, { ChangeEvent, FC, FormEvent, useState } from "react";
-
-export interface Processor {
-  productName: string; // The name of the product
-  manufacturersWebsite?: string; // Manufacturer's website URL for the product
-  additionalInfo?: string; // Additional information or features of the CPU, e.g., "Supports Hyper-Threading"
-
-  socketType: string; // The socket type the CPU is compatible with, e.g., LGA 1200, AM4
-  processorFamily: string; // The family of processors, e.g., Intel Core i7, AMD Ryzen 5
-  numberOfCores: string; // The number of cores the CPU has, e.g., 8
-  baseClockSpeed: string; // The base clock speed of the CPU, e.g., 3.8 GHz
-  boostClockSpeed: string; // The boost clock speed of the CPU, e.g., 4.7 GHz
-  cacheSize: string; // The size of the CPU's cache, e.g., 16 MB
-  tdp: string; // The thermal design power (TDP) of the CPU, e.g., 65W
-  integratedGraphics: string; // Indicates whether the CPU has integrated graphics, e.g., Yes, No
-}
+import { Processor, initializeProcessorFields } from "../models/Processor";
 
 interface ProcessorCaptureFormProps {
   onSubmit: (data: Processor) => void;
@@ -21,21 +7,8 @@ interface ProcessorCaptureFormProps {
 }
 
 const ProcessorCaptureForm: FC<ProcessorCaptureFormProps> = ({ onSubmit, onClear }) =>  {
-  const initialState = {
-    productName: '',
-    manufacturersWebsite: '',
-    additionalInfo: '',
-    socketType: '',
-    processorFamily: '',
-    numberOfCores: '',
-    baseClockSpeed: '',
-    boostClockSpeed: '',
-    cacheSize: '',
-    tdp: '',
-    integratedGraphics: '',
-  };
 
-  const [processorData, setProcessor] = useState<Processor>(initialState);
+  const [processorData, setProcessor] = useState<Processor>(initializeProcessorFields());
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -46,7 +19,7 @@ const ProcessorCaptureForm: FC<ProcessorCaptureFormProps> = ({ onSubmit, onClear
   };
 
   const clearForm = () => {
-    setProcessor(initialState);
+    setProcessor(initializeProcessorFields());
     onClear();
   };
 
