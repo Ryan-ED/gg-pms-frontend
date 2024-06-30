@@ -23,6 +23,8 @@ interface ProcessorCaptureFormProps {
 const ProcessorCaptureForm: FC<ProcessorCaptureFormProps> = ({ onSubmit, onClear }) =>  {
   const initialState = {
     productName: '',
+    manufacturersWebsite: '',
+    additionalInfo: '',
     socketType: '',
     processorFamily: '',
     numberOfCores: '',
@@ -35,7 +37,7 @@ const ProcessorCaptureForm: FC<ProcessorCaptureFormProps> = ({ onSubmit, onClear
 
   const [processorData, setProcessor] = useState<Processor>(initialState);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setProcessor((prevProcessor) => ({
       ...prevProcessor,
@@ -57,10 +59,7 @@ const ProcessorCaptureForm: FC<ProcessorCaptureFormProps> = ({ onSubmit, onClear
     <div className="container mt-5">
       <h2>Processor (CPU)</h2>
       <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="productName" className="form-label">
-            Product Name
-          </label>
+        <div className="form-floating mb-3">
           <input
             type="text"
             className="form-control"
@@ -69,11 +68,11 @@ const ProcessorCaptureForm: FC<ProcessorCaptureFormProps> = ({ onSubmit, onClear
             value={processorData.productName}
             onChange={handleChange}
           />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="socketType" className="form-label">
-            Socket Type
+          <label htmlFor="productName">
+            Product Name
           </label>
+        </div>
+        <div className="form-floating mb-3">
           <input
             type="text"
             className="form-control"
@@ -82,11 +81,11 @@ const ProcessorCaptureForm: FC<ProcessorCaptureFormProps> = ({ onSubmit, onClear
             value={processorData.socketType}
             onChange={handleChange}
           />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="processorFamily" className="form-label">
-            Processor Family
+          <label htmlFor="socketType">
+            Socket Type
           </label>
+        </div>
+        <div className="form-floating mb-3">
           <input
             type="text"
             className="form-control"
@@ -95,11 +94,11 @@ const ProcessorCaptureForm: FC<ProcessorCaptureFormProps> = ({ onSubmit, onClear
             value={processorData.processorFamily}
             onChange={handleChange}
           />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="numberOfCores" className="form-label">
-            Number of Cores
+          <label htmlFor="processorFamily">
+            Processor Family
           </label>
+        </div>
+        <div className="form-floating mb-3">
           <input
             type="text"
             className="form-control"
@@ -108,11 +107,11 @@ const ProcessorCaptureForm: FC<ProcessorCaptureFormProps> = ({ onSubmit, onClear
             value={processorData.numberOfCores}
             onChange={handleChange}
           />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="baseClockSpeed" className="form-label">
-            Base Clock Speed
+          <label htmlFor="numberOfCores">
+            Number of Cores
           </label>
+        </div>
+        <div className="form-floating mb-3">
           <input
             type="text"
             className="form-control"
@@ -121,11 +120,11 @@ const ProcessorCaptureForm: FC<ProcessorCaptureFormProps> = ({ onSubmit, onClear
             value={processorData.baseClockSpeed}
             onChange={handleChange}
           />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="boostClockSpeed" className="form-label">
-            Boost Clock Speed
+          <label htmlFor="baseClockSpeed">
+            Base Clock Speed
           </label>
+        </div>
+        <div className="form-floating mb-3">
           <input
             type="text"
             className="form-control"
@@ -134,11 +133,11 @@ const ProcessorCaptureForm: FC<ProcessorCaptureFormProps> = ({ onSubmit, onClear
             value={processorData.boostClockSpeed}
             onChange={handleChange}
           />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="cacheSize" className="form-label">
-            Cache Size
+          <label htmlFor="boostClockSpeed">
+            Boost Clock Speed
           </label>
+        </div>
+        <div className="form-floating mb-3">
           <input
             type="text"
             className="form-control"
@@ -147,11 +146,11 @@ const ProcessorCaptureForm: FC<ProcessorCaptureFormProps> = ({ onSubmit, onClear
             value={processorData.cacheSize}
             onChange={handleChange}
           />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="tdp" className="form-label">
-            TDP
+          <label htmlFor="cacheSize">
+            Cache Size
           </label>
+        </div>
+        <div className="form-floating mb-3">
           <input
             type="text"
             className="form-control"
@@ -160,11 +159,11 @@ const ProcessorCaptureForm: FC<ProcessorCaptureFormProps> = ({ onSubmit, onClear
             value={processorData.tdp}
             onChange={handleChange}
           />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="integratedGraphics" className="form-label">
-            Integrated Graphics
+          <label htmlFor="tdp">
+            TDP
           </label>
+        </div>
+        <div className="form-floating mb-3">
           <input
             type="text"
             className="form-control"
@@ -173,11 +172,39 @@ const ProcessorCaptureForm: FC<ProcessorCaptureFormProps> = ({ onSubmit, onClear
             value={processorData.integratedGraphics}
             onChange={handleChange}
           />
+          <label htmlFor="integratedGraphics">
+            Integrated Graphics
+          </label>
+        </div>
+        <div className="form-floating mb-3">
+          <input
+            type="url"
+            className="form-control"
+            id="manufacturersWebsite"
+            name="manufacturersWebsite"
+            value={processorData.manufacturersWebsite}
+            onChange={handleChange}
+          />
+          <label htmlFor="manufacturersWebsite">
+            Manufacturer's Website
+          </label>
+        </div>
+        <div className="form-floating mb-3">
+          <textarea
+            className="form-control"
+            id="additionalInfo"
+            name="additionalInfo"
+            value={processorData.additionalInfo}
+            onChange={handleChange}
+          />
+          <label htmlFor="additionalInfo">
+            Additional Information
+          </label>
         </div>
         <button type="submit" className="btn btn-primary">
           Submit
         </button>
-        <button className="btn btn-warning" type="button" onClick={clearForm}>Clear</button> {/* Add this button */}
+        <button className="btn btn-secondary ms-2" type="button" onClick={clearForm}>Clear</button>
       </form>
     </div>
   );

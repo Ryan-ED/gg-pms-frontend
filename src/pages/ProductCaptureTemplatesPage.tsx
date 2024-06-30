@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import ProcessorForm, { Processor } from "../components/ProcessorForm";
-
-
+import GraphicsCardForm, { GraphicsCard } from "../components/GraphicsCardForm";
 
 export default function ProductCaptureTemplatesPage() {
+  const [productType, setProductType] = useState<string>();
   const [formData, setFormData] = useState<Processor>({} as Processor);
   const [showCopyButton, setShowCopyButton] = useState(false);
 
@@ -37,12 +37,45 @@ export default function ProductCaptureTemplatesPage() {
     setFormData(data);
     setShowCopyButton(true);
   };
+  const handleGpuFormSubmit = (data: GraphicsCard) => {
+    // Handle the form data received from the child component
+    console.log('Form data received in parent:', data);
+    var preview = document.getElementById('preview');
+    if (preview) {
+      preview.innerHTML = generateGpuHtmlPreview(data);
+    }
+    // You can set state here if needed
+    // setFormData(data);
+    setShowCopyButton(true);
+  };
+
+  function handleDropdownChange(event: ChangeEvent<HTMLSelectElement>): void {
+    handleFormClear();
+    setProductType(event.target.value);
+  }
+
   return (
     <div className="container mt-5">
       <h1>Product Capture Templates</h1>
+      
+      <label htmlFor="productType">Product Type:</label>
+        <select className="form-select" id="productType" value={productType} onChange={handleDropdownChange}>
+          <option value='cpu'>Processor</option>
+          <option value='gpu'>Graphics Card</option>
+        </select>
       <div className="row">
         <div className="col-md-6">
-          <ProcessorForm onSubmit={handleFormSubmit} onClear={handleFormClear}/>
+          {productType === 'cpu' && (
+            <>
+              <ProcessorForm onSubmit={handleFormSubmit} onClear={handleFormClear}/>
+            </>
+          )}
+
+          {productType === 'gpu' && (
+            <>
+              <GraphicsCardForm onSubmit={handleGpuFormSubmit} onClear={handleFormClear}/>
+            </>
+          )}
         </div>
       </div>
         {showCopyButton && (
@@ -142,3 +175,44 @@ function generateHtmlPreview(data: Processor): string {
   `;
 }
 
+function generateGpuHtmlPreview(data: GraphicsCard): string {
+  // generate bootstrap table from the processor data
+  return `
+    <div class="text-start">
+      <table class="table table-dark table-striped">
+        <tr>
+          <th class="w-25">Product Name</th>
+          <td>${data.productName}</td>
+        </tr>
+        <tr>
+          <th class="w-25">Chipset</th>
+          <td>${data.chipset}</td>
+        </tr>
+        <tr>
+          <th>Memory</th>
+          <td>${data.memory}</td>
+        </tr>
+        <tr>
+          <th>Core Clock</th>
+          <td>${data.coreClock}</td>
+        </tr>
+        <tr>
+          <th>Boost Clock</th>
+          <td>${data.boostClock}</td>
+        </tr> 
+        <tr>
+          <th>TDP</th>
+          <td>${data.tdp}</td>
+        </tr>
+        <tr>
+          <th>Outputs</th>
+          <td>${data.outputs}</td>
+        </tr>
+        <tr>
+          <th>Length</th>
+          <td>${data.length}</td>
+        </tr>
+      </table>
+    </div>
+  `;
+}
