@@ -7,7 +7,10 @@ function Navbar() {
       <div className="collapse navbar-collapse" id="navbarNav">
         <ul className="navbar-nav">
           <li className="nav-item">
-            <a className="nav-link" href="/product-management">Product management</a>
+            <a className="nav-link" href="/product-stock-update">Product Stock Updates</a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link" href="/product-management">Product Management</a>
           </li>
           <li className="nav-item">
             <a className="nav-link" href="/product-capture">Product Capture</a>
