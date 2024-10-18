@@ -90,7 +90,7 @@ export default function ProductCaptureTemplatesPage() {
   }
 
   return (
-    <div className="container mt-5">
+    <>
       <h1>Product Capture Templates</h1>
       
       <label htmlFor="productType">Product Type:</label>
@@ -132,6 +132,6 @@ export default function ProductCaptureTemplatesPage() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

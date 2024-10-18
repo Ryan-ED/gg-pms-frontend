@@ -11,3 +11,22 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rotate-ease-in-out {
+  display: inline-block;
+  animation: rotate 0.5s ease-in-out infinite;
+}
+
+.rotate-cubic-bezier {
+  display: inline-block;
+  animation: rotate 1.5s cubic-bezier(.17,.67,.83,.67) infinite;
+}
