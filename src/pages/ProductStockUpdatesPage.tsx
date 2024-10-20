@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FileUploadState, Supplier, SupplierFile } from '../models/Supplier';
+import LoadingButton from '../components/layout/LoadingButton';
 
 const ProductStockUpdatesPage: React.FC = () => {
   const [lookupState, setLookupState] = useState<FileUploadState>(FileUploadState.NotUploaded);
@@ -10,6 +11,8 @@ const ProductStockUpdatesPage: React.FC = () => {
   const [files, setFiles] = useState<SupplierFile[]>([]);
   const [uploadBtnDisabled, setUploadBtnDisabled] = useState(true);
   const [fileInputsDisabled, setFileInputsDisabled] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const handleFileChange = (supplier: Supplier) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const eventFiles = event.target.files;
@@ -64,7 +67,8 @@ const ProductStockUpdatesPage: React.FC = () => {
     }
   };
 
-  const handleUpload = () => {
+  const handleUploadClick = () => {
+    setIsUploading(true);
     setUploadBtnDisabled(true);
     setFileInputsDisabled(true);
 
@@ -78,32 +82,40 @@ const ProductStockUpdatesPage: React.FC = () => {
       fetch('http://localhost:5000/api/fileupload', {
         method: 'POST',
         body: formData,
-      }).then((response) => {
-        if (response.ok) {
-          setFileUploadState(file.Supplier, FileUploadState.Uploaded);
-          clearFileInput(file.Supplier, FileUploadState.Uploaded);
-        }
-        // else {
-        //   setFileUploadState(file.supplier, FileUploadState.Failed);
-        //   response.text().then(console.error);
-        // }
+      }).then(() => {
+        setFileUploadState(file.Supplier, FileUploadState.Uploaded);
+        clearFileInput(file.Supplier, FileUploadState.Uploaded);
+        // remove uploaded file from files array
+        setFiles(files.filter((f) => f.Supplier !== file.Supplier));
       }).catch((error) => {
         setFileUploadState(file.Supplier, FileUploadState.Failed);
         console.error(error);
       });
     });
-    
-    setFiles([]);
-    setUploadBtnDisabled(false);
-    setFileInputsDisabled(false);
-
-    // wait for 3 seconds
-    // setTimeout(() => {
-    //   setFiles([]);
-    //   setUploadBtnDisabled(false);
-    //   setFileInputsDisabled(false);
-    // }, 3000);
   };
+
+  const handleBooksiteDownloadClick = () => {
+    setIsDownloading(true);
+    fetch('http://localhost:5000/api/fileupload/booksite', {
+      method: 'GET',
+    }).then((response) => {
+      if (response.ok) {
+        response.blob().then((blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          const contentDisposition = response.headers.get('Content-Disposition');
+          const filename = contentDisposition?.split('filename=')[1];
+          a.download = filename || 'itemmast.txt';
+          a.click();
+          window.URL.revokeObjectURL(url);
+        });
+      }
+    }).catch((error) => {
+      console.error(error);
+    })
+    .finally(() => setIsDownloading(false));
+  }
 
   const clearFileInput = (supplier: Supplier, uploadState: FileUploadState = FileUploadState.NotUploaded) => {
     const inputElement = document.getElementById(supplier.toLowerCase()) as HTMLInputElement;
@@ -181,7 +193,11 @@ const ProductStockUpdatesPage: React.FC = () => {
           </div>
         </div>
         
-        <button type="button" disabled={uploadBtnDisabled} className="btn btn-primary mt-5" onClick={handleUpload}>Upload</button>
+        {isUploading && <LoadingButton classNames='btn-primary mt-5' />}
+        {!isUploading && <button type="button" disabled={uploadBtnDisabled} className="btn btn-primary mt-5" onClick={handleUploadClick}>Upload</button>}
+        <br />
+        {isDownloading && <LoadingButton classNames='btn-info mt-1' />}
+        {!isDownloading && <button type="button" className="btn btn-info mt-1" onClick={handleBooksiteDownloadClick}>Download Booksite</button>}
       </div>
     </div>
   );
