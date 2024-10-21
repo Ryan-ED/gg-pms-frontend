@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FileUploadState, Supplier, SupplierFile } from '../models/Supplier';
 import LoadingButton from '../components/layout/LoadingButton';
+import { uploadFile, downloadBooksiteFile } from '../services/supplierFileHandlerService';
 
 const ProductStockUpdatesPage: React.FC = () => {
   const [lookupState, setLookupState] = useState<FileUploadState>(FileUploadState.NotUploaded);
@@ -67,55 +68,53 @@ const ProductStockUpdatesPage: React.FC = () => {
     }
   };
 
-  const handleUploadClick = () => {
+  const handleUploadClick = async () => {
     setIsUploading(true);
     setUploadBtnDisabled(true);
     setFileInputsDisabled(true);
-
-    files.forEach((file) => {
-      setFileUploadState(file.Supplier, FileUploadState.Uploading);
-
-      const formData = new FormData();
-      formData.append('supplier', file.Supplier);
-      formData.append('file', file.File);
-
-      fetch('http://localhost:5000/api/fileupload', {
-        method: 'POST',
-        body: formData,
-      }).then(() => {
-        setFileUploadState(file.Supplier, FileUploadState.Uploaded);
-        clearFileInput(file.Supplier, FileUploadState.Uploaded);
-        // remove uploaded file from files array
-        setFiles(files.filter((f) => f.Supplier !== file.Supplier));
-      }).catch((error) => {
-        setFileUploadState(file.Supplier, FileUploadState.Failed);
-        console.error(error);
-      });
-    });
+  
+    try {
+      // Use Promise.all to wait for all uploads to finish
+      await Promise.all(
+        files.map(async (file) => {
+          setFileUploadState(file.Supplier, FileUploadState.Uploading);
+  
+          // Use try/catch within the map to catch individual file errors
+          try {
+            await uploadFile(file);
+            setFileUploadState(file.Supplier, FileUploadState.Uploaded);
+          } catch (error) {
+            setFileUploadState(file.Supplier, FileUploadState.Failed);
+            console.log(`Failed to upload file for supplier ${file.Supplier}:`, error);
+          }
+        })
+      );
+    } catch (error) {
+      // This catch is for any unexpected error during the entire upload process
+      console.log("An unexpected error occurred during file uploads:", error);
+    } finally {
+      // Re-enable buttons and inputs after all uploads (success or fail)
+      setIsUploading(false);
+      setUploadBtnDisabled(false);
+      setFileInputsDisabled(false);
+    }
   };
+  
 
-  const handleBooksiteDownloadClick = () => {
-    setIsDownloading(true);
-    fetch('http://localhost:5000/api/fileupload/booksite', {
-      method: 'GET',
-    }).then((response) => {
-      if (response.ok) {
-        response.blob().then((blob) => {
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          const contentDisposition = response.headers.get('Content-Disposition');
-          const filename = contentDisposition?.split('filename=')[1];
-          a.download = filename || 'itemmast.txt';
-          a.click();
-          window.URL.revokeObjectURL(url);
-        });
-      }
-    }).catch((error) => {
-      console.error(error);
-    })
-    .finally(() => setIsDownloading(false));
-  }
+  const handleBooksiteDownloadClick = async () => {
+    setIsDownloading(true);  // Set the downloading state to true at the beginning
+  
+    try {
+      // Await the file download
+      await downloadBooksiteFile();
+    } catch (error) {
+      // Handle any errors from the file download
+      console.error("Error downloading the booksite file:", error);
+    } finally {
+      // Reset the downloading state regardless of success or failure
+      setIsDownloading(false);
+    }
+  };  
 
   const clearFileInput = (supplier: Supplier, uploadState: FileUploadState = FileUploadState.NotUploaded) => {
     const inputElement = document.getElementById(supplier.toLowerCase()) as HTMLInputElement;
