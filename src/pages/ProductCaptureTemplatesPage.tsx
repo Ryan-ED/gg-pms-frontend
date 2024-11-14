@@ -1,34 +1,41 @@
 import { ChangeEvent, useState } from "react";
 import ProcessorForm from "../components/ProcessorForm";
 import GraphicsCardForm from "../components/GraphicsCardForm";
-import { Processor, generateCpuHtmlTableTemplate, generateCpuTablePreview, generateProcessorTags } from "../models/Processor";
-import { GraphicsCard, generateGpuHtmlTableTemplate, generateGpuTablePreview, generateGraphicsCardTags } from "../models/GraphicsCard";
-import { Product, ProductType } from "../models/Product";
+import {Processor, generateProcessorTags, processorFieldLabels} from "../models/Processor";
+import {GraphicsCard, generateGraphicsCardTags, graphicsCardFieldLabels} from "../models/GraphicsCard";
+import {generateHtmlTableTemplate, generateTablePreview, Product, ProductType} from "../models/Product";
 import { Toast } from 'bootstrap';
+import MemoryForm from "../components/MemoryForm";
+import {generateMemoryTags, Memory, memoryFieldLabels} from "../models/Memory";
 
 export default function ProductCaptureTemplatesPage() {
   const [productType, setProductType] = useState<string>();
   const [cpuData, setCpuFormData] = useState<Processor>({} as Processor);
   const [gpuData, setGpuFormData] = useState<GraphicsCard>({} as GraphicsCard);
+  const [ramData, setRamFormData] = useState<Memory>({} as Memory);
   const [showCopyButton, setShowCopyButton] = useState(false);
   const toastLiveExample = document.getElementById('liveToast');
-  var toastMessage = 'Copied!';
+  const [toastMessage, setToastMessage] = useState("");
 
   const showToast = (message: string) => {
-    toastMessage = message;
-    if (!toastLiveExample) return;
-    const toastBootstrap = Toast.getOrCreateInstance(toastLiveExample);
-    toastBootstrap.show();
+    setToastMessage(message);
+    alert(message);
+    // if (!toastLiveExample) return;
+    // const toastBootstrap = Toast.getOrCreateInstance(toastLiveExample);
+    // toastBootstrap.show();
   };
 
   const handleCopyTableToClipboard = () => {
-    var tableTemplateHtml = '';
+    let tableTemplateHtml = '';
     switch (productType) {
-      case 'cpu':
-        tableTemplateHtml = generateCpuHtmlTableTemplate(cpuData);
-        break;
       case 'gpu':
-        tableTemplateHtml = generateGpuHtmlTableTemplate(gpuData);
+        tableTemplateHtml = generateHtmlTableTemplate(gpuData, graphicsCardFieldLabels);
+        break;
+      case 'cpu':
+        tableTemplateHtml = generateHtmlTableTemplate(cpuData, processorFieldLabels);
+        break;
+      case 'ram':
+        tableTemplateHtml = generateHtmlTableTemplate(ramData, memoryFieldLabels);
         break;
     }
         
@@ -40,13 +47,16 @@ export default function ProductCaptureTemplatesPage() {
   };
 
   const handleCopyTagsToClipboard = () => {
-    var tags = '';
+    let tags = '';
     switch (productType) {
+      case 'gpu':
+        tags = generateGraphicsCardTags(gpuData);
+        break;
       case 'cpu':
         tags = generateProcessorTags(cpuData);
         break;
-      case 'gpu':
-        tags = generateGraphicsCardTags(gpuData);
+      case 'ram':
+        tags = generateMemoryTags(ramData);
         break;
     }
         
@@ -58,7 +68,7 @@ export default function ProductCaptureTemplatesPage() {
   };
 
   const handleFormClear = () => {
-    var preview = document.getElementById('preview');
+    const preview = document.getElementById('preview');
     if (preview) {
       preview.innerHTML = '';
     }
@@ -66,17 +76,21 @@ export default function ProductCaptureTemplatesPage() {
   };
 
   const handleFormSubmit = (data: Product, productType: ProductType) => {
-    var preview = document.getElementById('preview');
-    
+    const preview = document.getElementById('preview');
+
     if (preview) {
         switch (productType) {
           case ProductType.Processor:
-            preview.innerHTML = generateCpuTablePreview(data as Processor);
+            preview.innerHTML = generateTablePreview(data as Processor, processorFieldLabels);
             setCpuFormData(data as Processor);
             break;
           case ProductType.GraphicsCard:
-            preview.innerHTML = generateGpuTablePreview(data as GraphicsCard);
+            preview.innerHTML = generateTablePreview(data as GraphicsCard, graphicsCardFieldLabels);
             setGpuFormData(data as GraphicsCard);
+            break;
+          case ProductType.Memory:
+            preview.innerHTML = generateTablePreview(data as Memory, memoryFieldLabels);
+            setRamFormData(data as Memory);
             break;
         }
     }
@@ -95,8 +109,10 @@ export default function ProductCaptureTemplatesPage() {
       
       <label htmlFor="productType">Product Type:</label>
       <select className="form-select" id="productType" value={productType} onChange={handleDropdownChange}>
-        <option value='cpu'>Processor</option>
+        <option>Select Product Type</option>
         <option value='gpu'>Graphics Card</option>
+        <option value='cpu'>Processor</option>
+        <option value='ram'>Memory (RAM)</option>
       </select>
 
       <div className="row">
@@ -112,17 +128,23 @@ export default function ProductCaptureTemplatesPage() {
               <GraphicsCardForm onSubmit={handleFormSubmit} onClear={handleFormClear}/>
             </>
           )}
+
+          {productType === 'ram' && (
+              <>
+                <MemoryForm onSubmit={handleFormSubmit} onClear={handleFormClear}/>
+              </>
+          )}
         </div>
       </div>
         {showCopyButton && (
-          <div>
-            <button onClick={handleCopyTableToClipboard}>Copy table to Clipboard</button>
-            <button onClick={handleCopyTagsToClipboard}>Copy tags to Clipboard</button>
+          <div className="mt-2 mb-2">
+            <button type="button" className="btn btn-outline-info"  onClick={handleCopyTableToClipboard}>Copy table to Clipboard</button>
+            <button type="button" className="btn btn-outline-info ms-3"  onClick={handleCopyTagsToClipboard}>Copy tags to Clipboard</button>
           </div>
         )}
       <div id="preview"></div>
 
-      <div className="toast-container position-absolute top-0 end-50">
+      <div className="toast-container top-0 end-50">
           <div id="liveToast" className="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
           <div className="d-flex">
             <div className="toast-body">

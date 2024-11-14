@@ -1,4 +1,4 @@
-import { Product, initializeProductFields, productFieldLabels } from "./Product";
+import {Product, initializeProductFields, productFieldLabels} from "./Product";
 
 export interface Processor extends Product {
   manufacturer: string; // The manufacturer of the CPU, e.g., Intel, AMD
@@ -48,46 +48,6 @@ export const initializeProcessorFields = (): Processor => ({
   integratedGraphics: '',
   coolerIncluded: false
 });
-
-export const generateCpuTablePreview = (data: Processor): string => {
-  const tableRows = Object.keys(data).map((key) => {
-    return `
-      <tr>
-        <th class="w-25">${processorFieldLabels[key as keyof Processor]}</th>
-        <td>${data[key as keyof Processor]}</td>
-      </tr>
-    `;
-  }).join('');
-
-  return `
-    <div class="text-start">
-      <table class="table table-dark table-striped">
-        ${tableRows}
-      </table>
-    </div>
-  `
-}
-
-export const generateCpuHtmlTableTemplate = (data: Processor): string => {
-  const tableRows = Object.keys(data).map((key) => {
-    if (key === 'productName' || key === 'manufacturersWebsite' || key === 'additionalInfo') return '';
-    return `
-      <tr>
-        <th style="width: 30%;">${processorFieldLabels[key as keyof Processor]}</th>
-        <td>${data[key as keyof Processor]}</td>
-      </tr>
-    `;
-  }).join('');
-
-  return `
-    <h3>Tech specs:</h3>
-    <table style="width: 65%; text-align: left;">
-      ${tableRows}
-    </table>
-    ${data.additionalInfo && `<p>${data.additionalInfo}</p>`}
-    ${data.manufacturersWebsite && `<p><a href="${data.manufacturersWebsite}" target="_blank">Click here for the manufacturer's website</a></p>`}
-  `;
-};
 
 export const generateProcessorTags = (data: Processor): string => {
   return `

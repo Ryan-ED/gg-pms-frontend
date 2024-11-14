@@ -55,46 +55,6 @@ export const initializeGraphicsCardFields = (): GraphicsCard => ({
   powerConnectors: '',
 });
 
-export const generateGpuTablePreview = (data: GraphicsCard): string => {
-  const tableRows = Object.keys(data).map((key) => {
-    return `
-      <tr>
-        <th class="w-25">${graphicsCardFieldLabels[key as keyof GraphicsCard]}</th>
-        <td>${data[key as keyof GraphicsCard]}</td>
-      </tr>
-    `;
-  }).join('');
-
-  return `
-    <div class="text-start">
-      <table class="table table-dark table-striped">
-        ${tableRows}
-      </table>
-    </div>
-  `;
-}
-
-export const generateGpuHtmlTableTemplate = (data: GraphicsCard): string => {
-  const tableRows = Object.keys(data).map((key) => {
-    if (key === 'productName' || key === 'manufacturersWebsite' || key === 'additionalInfo') return '';
-    return `
-      <tr>
-        <th style="width: 30%;">${graphicsCardFieldLabels[key as keyof GraphicsCard]}</th>
-        <td>${data[key as keyof GraphicsCard]}</td>
-      </tr>
-    `;
-  }).join('');
-
-  return `
-    <h3>Tech specs:</h3>
-    <table style="width: 65%; text-align: left;">
-      ${tableRows}
-      </table>
-      ${data.additionalInfo && `<p>${data.additionalInfo}</p>`}
-      ${data.manufacturersWebsite && `<p><a href="${data.manufacturersWebsite}" target="_blank">Click here for the manufacturer's website</a></p>`}
-    `;
-};
-
 export const generateGraphicsCardTags = (data: GraphicsCard): string => {
   return `pc gaming,` +
     `graphics card,` +
