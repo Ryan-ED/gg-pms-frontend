@@ -19,10 +19,10 @@ export default function ProductCaptureTemplatesPage() {
 
   const showToast = (message: string) => {
     setToastMessage(message);
-    alert(message);
-    // if (!toastLiveExample) return;
-    // const toastBootstrap = Toast.getOrCreateInstance(toastLiveExample);
-    // toastBootstrap.show();
+    // alert(message);
+    if (!toastLiveExample) return;
+    const toastBootstrap = Toast.getOrCreateInstance(toastLiveExample);
+    toastBootstrap.show();
   };
 
   const handleCopyTableToClipboard = () => {
@@ -106,45 +106,57 @@ export default function ProductCaptureTemplatesPage() {
   return (
     <>
       <h1>Product Capture Templates</h1>
-      
-      <label htmlFor="productType">Product Type:</label>
-      <select className="form-select" id="productType" value={productType} onChange={handleDropdownChange}>
-        <option>Select Product Type</option>
-        <option value='gpu'>Graphics Card</option>
-        <option value='cpu'>Processor</option>
-        <option value='ram'>Memory (RAM)</option>
-      </select>
+      <div className="form-floating">
+        <select className="form-select" id="productType" value={productType} onChange={handleDropdownChange}>
+          <option>Select Product Type</option>
+          <option value='gpu'>Graphics Card</option>
+          <option value='cpu'>Processor</option>
+          <option value='ram'>Memory (RAM)</option>
+        </select>
+        <label htmlFor="productType">Product Type:</label>
+      </div>
 
       <div className="row">
-        <div className="col-md-6">
-          {productType === 'cpu' && (
-            <>
-              <ProcessorForm onSubmit={handleFormSubmit} onClear={handleFormClear}/>
-            </>
-          )}
+        <div className="col-lg-6">
 
-          {productType === 'gpu' && (
-            <>
-              <GraphicsCardForm onSubmit={handleFormSubmit} onClear={handleFormClear}/>
-            </>
-          )}
+          <div className="container mt-3">
 
-          {productType === 'ram' && (
-              <>
-                <MemoryForm onSubmit={handleFormSubmit} onClear={handleFormClear}/>
-              </>
+            {productType === 'cpu' && (
+                <>
+                  <ProcessorForm onSubmit={handleFormSubmit} onClear={handleFormClear}/>
+                </>
+            )}
+
+            {productType === 'gpu' && (
+                <>
+                  <GraphicsCardForm onSubmit={handleFormSubmit} onClear={handleFormClear}/>
+                </>
+            )}
+
+            {productType === 'ram' && (
+                <>
+                  <MemoryForm onSubmit={handleFormSubmit} onClear={handleFormClear}/>
+                </>
+            )}
+          </div>
+        </div>
+
+        <div className="col-lg-6">
+          {showCopyButton && (
+              <div className="mt-3 mb-3">
+                <button type="button" className="btn btn-outline-info" onClick={handleCopyTableToClipboard}>Copy table
+                  to Clipboard
+                </button>
+                <button type="button" className="btn btn-outline-info ms-3" onClick={handleCopyTagsToClipboard}>Copy
+                  tags to Clipboard
+                </button>
+              </div>
           )}
+          <div id="preview"></div>
         </div>
       </div>
-        {showCopyButton && (
-          <div className="mt-2 mb-2">
-            <button type="button" className="btn btn-outline-info"  onClick={handleCopyTableToClipboard}>Copy table to Clipboard</button>
-            <button type="button" className="btn btn-outline-info ms-3"  onClick={handleCopyTagsToClipboard}>Copy tags to Clipboard</button>
-          </div>
-        )}
-      <div id="preview"></div>
 
-      <div className="toast-container top-0 end-50">
+      <div className="toast-container top-50 end-50">
           <div id="liveToast" className="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
           <div className="d-flex">
             <div className="toast-body">

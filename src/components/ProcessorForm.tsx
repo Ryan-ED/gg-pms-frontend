@@ -29,7 +29,7 @@ const ProcessorCaptureForm: FC<ProcessorCaptureFormProps> = ({ onSubmit, onClear
   };
 
   return (
-    <div className="container mt-5">
+    <>
       <h2>Processor (CPU)</h2>
       <form onSubmit={handleSubmit}>
 
@@ -50,6 +50,7 @@ const ProcessorCaptureForm: FC<ProcessorCaptureFormProps> = ({ onSubmit, onClear
         <div className="form-floating mb-3">
           <select required className="form-select"
             id="manufacturer"
+            name="manufacturer"
             value={processorData.manufacturer}
             onChange={handleChange}>
             <option value="">Select a manufacturer</option>
@@ -254,7 +255,7 @@ const ProcessorCaptureForm: FC<ProcessorCaptureFormProps> = ({ onSubmit, onClear
         </button>
         <button className="btn btn-secondary ms-2" type="button" onClick={clearForm}>Clear</button>
       </form>
-    </div>
+    </>
   );
 }
 

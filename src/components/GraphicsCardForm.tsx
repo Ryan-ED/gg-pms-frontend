@@ -31,7 +31,7 @@ const GraphicsCardForm: FC<GraphicsCardCaptureFormProps> = ({ onSubmit, onClear 
   };
 
   return (
-    <div className="container mt-5">
+    <>
       <h2>Graphics Card (GPU)</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-floating mb-3">
@@ -234,7 +234,7 @@ const GraphicsCardForm: FC<GraphicsCardCaptureFormProps> = ({ onSubmit, onClear 
         <button type="submit" className="btn btn-primary">Submit</button>
         <button type="button" className="btn btn-secondary ms-2" onClick={clearForm}>Clear</button>
       </form>
-    </div>
+    </>
   );
 }
 

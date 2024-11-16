@@ -1,5 +1,12 @@
 ﻿import {productFieldLabels, ProductType} from "../models/Product";
-import {initializeMemoryFields, Memory, memoryFieldLabels, memoryModuleType, memoryTypes} from "../models/Memory";
+import {
+    initializeMemoryFields,
+    Memory,
+    memoryFieldLabels,
+    memoryFieldTooltips,
+    memoryModuleType,
+    memoryTypes
+} from "../models/Memory";
 import React, {useState} from "react";
 
 interface MemoryCaptureFormProps {
@@ -9,13 +16,21 @@ interface MemoryCaptureFormProps {
 
 const MemoryCaptureForm: React.FC<MemoryCaptureFormProps> = ({ onSubmit, onClear }) => {
     const [memoryData, setMemoryData] = useState<Memory>(initializeMemoryFields());
+    const [heatSpreaderChecked, setHeadSpreaderChecked] = useState<boolean>();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setMemoryData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
+        if (name === 'heatSpreaderIncluded') {
+            const target = e.target as HTMLInputElement
+            setHeadSpreaderChecked(target.checked)
+            setMemoryData(prevState => ({...prevState, [name]: target.checked}))
+        }
+        else {
+            setMemoryData((prevData) => ({
+                ...prevData,
+                [name]: value,
+            }));
+        }
     };
 
     const clearForm = () => {
@@ -28,22 +43,33 @@ const MemoryCaptureForm: React.FC<MemoryCaptureFormProps> = ({ onSubmit, onClear
         onSubmit(memoryData, ProductType.Memory);
     };
 
+    const getTooltipByField = (fieldLabel: string): string => {
+        return memoryFieldTooltips[fieldLabel as keyof Memory]
+    }
+
     return (
-        <div className="container mt-5">
+        <>
             <h2>Memory (RAM)</h2>
             <form onSubmit={handleSubmit}>
-                <div className="form-floating mb-3">
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="productName"
-                        name="productName"
-                        value={memoryData.productName}
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="productName">
-                        {productFieldLabels.productName}
-                    </label>
+                <div className="row">
+                    <div className="col-11">
+                        <div className="form-floating mb-3 col-12">
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="productName"
+                                name="productName"
+                                value={memoryData.productName}
+                                onChange={handleChange}
+                            />
+                            <label htmlFor="productName">
+                                {productFieldLabels.productName}
+                            </label>
+                        </div>
+                    </div>
+                    <div title={getTooltipByField("productName")} className="col-1 d-flex align-items-start mt-1">
+                        <i className="bi bi-info-circle-fill tooltip-icon"></i>
+                    </div>
                 </div>
 
                 <div className="form-floating mb-3">
@@ -148,7 +174,8 @@ const MemoryCaptureForm: React.FC<MemoryCaptureFormProps> = ({ onSubmit, onClear
                         type="checkbox"
                         id="heatSpreaderIncluded"
                         name="heatSpreaderIncluded"
-                        value={memoryData.heatSpreaderIncluded ? "Yes" : "No"}
+                        checked={heatSpreaderChecked}
+                        value=""
                         onChange={handleChange}
                     />
                     <label className="form-check-label" htmlFor="heatSpreaderIncluded">
@@ -189,7 +216,7 @@ const MemoryCaptureForm: React.FC<MemoryCaptureFormProps> = ({ onSubmit, onClear
                     Clear
                 </button>
             </form>
-        </div>
+        </>
     );
 }
 

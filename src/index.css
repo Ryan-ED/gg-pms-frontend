@@ -12,6 +12,17 @@ code {
     monospace;
 }
 
+.tooltip-icon {
+  cursor: help;
+  font-size: x-large;
+  padding: 5px 10px;
+  color: cornflowerblue;
+}
+
+.tooltip-icon:hover {
+  color: #0d6efd;
+}
+
 @keyframes rotate {
   from {
     transform: rotate(0deg);

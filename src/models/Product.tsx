@@ -22,11 +22,17 @@ export enum ProductType {
   Memory = 'Memory'
 }
 
+export const productFieldTooltips: Record<keyof Product, string> = {
+  productName: 'The name or title of the product. This goes in the "Title" field in Shopify',
+  manufacturersWebsite: 'A link to the manufacturer\'s website for this product. This will be added at the end of the product description.',
+  additionalInfo: 'Any additional information regarding the product'
+}
+
 export const generateTablePreview = <T extends Product>(data: T, fieldLabels: { [key in keyof T]: string }): string => {
   const tableRows = Object.keys(data).map((key) => {
     return `
       <tr>
-        <th class="w-25">${fieldLabels[key as keyof T]}</th>
+        <th class="w-50">${fieldLabels[key as keyof T]}</th>
         <td>${data[key as keyof T]}</td>
       </tr>
     `;

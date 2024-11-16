@@ -1,4 +1,4 @@
-﻿import {initializeProductFields, Product, productFieldLabels} from "./Product";
+﻿import {initializeProductFields, Product, productFieldLabels, productFieldTooltips} from "./Product";
 
 export interface Memory extends Product {
     manufacturer: string;
@@ -62,3 +62,15 @@ export const memoryTypes = [
     'DDR4',
     'DDR3'
 ];
+
+export const memoryFieldTooltips: Record<keyof Memory, string> = {
+    ...productFieldTooltips,
+
+    manufacturer: 'The name of the product\'s manufacturer',
+    memoryType: 'Memory Type',
+    capacity: 'Capacity (GB)',
+    modules: 'Modules',
+    frequency: 'Frequency (MHz)',
+    casLatency: 'CAS Latency',
+    heatSpreaderIncluded: 'Heat Spreader Included'
+}
