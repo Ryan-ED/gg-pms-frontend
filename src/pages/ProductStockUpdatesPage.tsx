@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { FileUploadState, Supplier, SupplierFile } from '../models/Supplier';
 import LoadingButton from '../components/layout/LoadingButton';
 import { uploadFile, downloadBooksiteFile } from '../services/supplierFileHandlerService';
@@ -14,6 +14,10 @@ const ProductStockUpdatesPage: React.FC = () => {
   const [fileInputsDisabled, setFileInputsDisabled] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+
+  useEffect(() => {
+    document.title = "Product Stock Updates - GG PMS";
+  }, []);
 
   const handleFileChange = (supplier: Supplier) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const eventFiles = event.target.files;

@@ -1,6 +1,4 @@
-﻿import {useState} from "react";
-
-interface ModalProps {
+﻿interface ModalProps {
     title: string;
     body: string;
 }

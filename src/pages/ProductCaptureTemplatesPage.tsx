@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 import ProcessorForm from "../components/ProcessorForm";
 import GraphicsCardForm from "../components/GraphicsCardForm";
 import {Processor, generateProcessorTags, processorFieldLabels} from "../models/Processor";
@@ -9,6 +9,10 @@ import MemoryForm from "../components/MemoryForm";
 import {generateMemoryTags, Memory, memoryFieldLabels} from "../models/Memory";
 
 export default function ProductCaptureTemplatesPage() {
+  useEffect(() => {
+    document.title = "Product Capture - GG PMS";
+  }, []);
+
   const [productType, setProductType] = useState<string>();
   const [cpuData, setCpuFormData] = useState<Processor>({} as Processor);
   const [gpuData, setGpuFormData] = useState<GraphicsCard>({} as GraphicsCard);
