@@ -9,13 +9,20 @@ interface ProcessorCaptureFormProps {
 
 const ProcessorCaptureForm: FC<ProcessorCaptureFormProps> = ({ onSubmit, onClear }) =>  {
   const [processorData, setProcessor] = useState<Processor>(initializeProcessorFields());
+  const [coolerIncludedChecked, setCoolerIncludedChecked] = useState<boolean>();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setProcessor((prevProcessor) => ({
-      ...prevProcessor,
-      [name]: value,
-    }));
+    if (name === 'coolerIncluded') {
+      const target = e.target as HTMLInputElement
+      setCoolerIncludedChecked(target.checked)
+      setProcessor(prevState => ({...prevState, [name]: target.checked ? 'Yes' : 'No'}))
+    } else {
+      setProcessor((prevProcessor) => ({
+        ...prevProcessor,
+        [name]: value,
+      }));
+    }
   };
 
   const clearForm = () => {
@@ -199,7 +206,8 @@ const ProcessorCaptureForm: FC<ProcessorCaptureFormProps> = ({ onSubmit, onClear
             type="checkbox"
             id="coolerIncluded"
             name="coolerIncluded"
-            value={processorData.coolerIncluded ? "Yes" : "No"}
+            checked={coolerIncludedChecked}
+            value=""
             onChange={handleChange}
           />
           <label className="form-check-label" htmlFor="coolerIncluded">

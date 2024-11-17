@@ -12,7 +12,7 @@ export interface Processor extends Product {
   l3CacheSize: number; // The size of the L3 cache, e.g., 16MB
   tdp: number; // The thermal design power (TDP) of the CPU, e.g., 65W
   integratedGraphics: string; // Indicates whether the CPU has integrated graphics, e.g., Yes, No
-  coolerIncluded: boolean; // Indicates whether a cooler is included with the CPU, e.g., true, false
+  coolerIncluded: string; // Indicates whether a cooler is included with the CPU, e.g., true, false
 }
 
 export const processorFieldLabels: Record<keyof Processor, string> = {
@@ -29,7 +29,7 @@ export const processorFieldLabels: Record<keyof Processor, string> = {
   l3CacheSize: 'L3 Cache Size (MB)',
   tdp: 'Thermal Design Power [TDP] (Watts)',
   integratedGraphics: 'Integrated Graphics',
-  coolerIncluded: 'Cooler Included'
+  coolerIncluded: 'Cooler Included?'
 };
 
 export const initializeProcessorFields = (): Processor => ({
@@ -46,7 +46,7 @@ export const initializeProcessorFields = (): Processor => ({
   l3CacheSize: 0,
   tdp: 0,
   integratedGraphics: '',
-  coolerIncluded: false
+  coolerIncluded: 'No'
 });
 
 export const generateProcessorTags = (data: Processor): string => {

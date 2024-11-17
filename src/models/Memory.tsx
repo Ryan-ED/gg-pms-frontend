@@ -7,7 +7,7 @@ export interface Memory extends Product {
     modules: string;
     frequency: number;
     casLatency: string;
-    heatSpreaderIncluded: boolean;
+    heatSpreaderIncluded: string;
 }
 
 export const memoryFieldLabels: Record<keyof Memory, string> = {
@@ -19,7 +19,7 @@ export const memoryFieldLabels: Record<keyof Memory, string> = {
     modules: 'Modules',
     frequency: 'Frequency (MHz)',
     casLatency: 'CAS Latency',
-    heatSpreaderIncluded: 'Heat Spreader Included'
+    heatSpreaderIncluded: 'Heat Spreader Included?'
 }
 
 export const initializeMemoryFields = (): Memory => ({
@@ -31,7 +31,7 @@ export const initializeMemoryFields = (): Memory => ({
     modules: '',
     frequency: 0,
     casLatency: '',
-    heatSpreaderIncluded: false
+    heatSpreaderIncluded: 'No'
 });
 
 export const generateMemoryTags = (data: Memory) => {

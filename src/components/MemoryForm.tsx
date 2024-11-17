@@ -23,7 +23,7 @@ const MemoryCaptureForm: React.FC<MemoryCaptureFormProps> = ({ onSubmit, onClear
         if (name === 'heatSpreaderIncluded') {
             const target = e.target as HTMLInputElement
             setHeadSpreaderChecked(target.checked)
-            setMemoryData(prevState => ({...prevState, [name]: target.checked}))
+            setMemoryData(prevState => ({...prevState, [name]: target.checked ? 'Yes' : 'No'}))
         }
         else {
             setMemoryData((prevData) => ({
@@ -72,143 +72,208 @@ const MemoryCaptureForm: React.FC<MemoryCaptureFormProps> = ({ onSubmit, onClear
                     </div>
                 </div>
 
-                <div className="form-floating mb-3">
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="manufacturer"
-                        name="manufacturer"
-                        value={memoryData.manufacturer}
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="manufacturer">
-                        {memoryFieldLabels.manufacturer}
-                    </label>
+                <div className="row">
+                    <div className="col-11">
+                        <div className="form-floating mb-3">
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="manufacturer"
+                                name="manufacturer"
+                                value={memoryData.manufacturer}
+                                onChange={handleChange}
+                            />
+                            <label htmlFor="manufacturer">
+                                {memoryFieldLabels.manufacturer}
+                            </label>
+                        </div>
+                    </div>
+                    <div title={getTooltipByField("manufacturer")} className="col-1 d-flex align-items-start mt-1">
+                        <i className="bi bi-info-circle-fill tooltip-icon"></i>
+                    </div>
                 </div>
 
-                <div className="form-floating mb-3">
-                    <select
-                        className="form-select"
-                        id="memoryType"
-                        name="memoryType"
-                        value={memoryData.memoryType}
-                        onChange={handleChange}
-                    >
-                        <option value="">Select Memory Type</option>
-                        {memoryTypes.map((type) => (
-                            <option key={type} value={type}>
-                                {type}
-                            </option>
-                        ))}
-                    </select>
-                    <label htmlFor="memoryType">
-                        {memoryFieldLabels.memoryType}
-                    </label>
+                <div className="row">
+                    <div className="col-11">
+                        <div className="form-floating mb-3">
+                            <select
+                                className="form-select"
+                                id="memoryType"
+                                name="memoryType"
+                                value={memoryData.memoryType}
+                                onChange={handleChange}
+                            >
+                                <option value="">Select Memory Type</option>
+                                {memoryTypes.map((type) => (
+                                    <option key={type} value={type}>
+                                        {type}
+                                    </option>
+                                ))}
+                            </select>
+                            <label htmlFor="memoryType">
+                                {memoryFieldLabels.memoryType}
+                            </label>
+                        </div>
+                    </div>
+                    <div title={getTooltipByField("memoryType")} className="col-1 d-flex align-items-start mt-1">
+                        <i className="bi bi-info-circle-fill tooltip-icon"></i>
+                    </div>
                 </div>
 
-                <div className="form-floating mb-3">
-                    <input
-                        type="number"
-                        className="form-control"
-                        id="capacity"
-                        name="capacity"
-                        value={memoryData.capacity}
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="capacity">
-                        {memoryFieldLabels.capacity}
-                    </label>
+                <div className="row">
+                    <div className="col-11">
+                        <div className="form-floating mb-3">
+                            <input
+                                type="number"
+                                className="form-control"
+                                id="capacity"
+                                name="capacity"
+                                value={memoryData.capacity}
+                                onChange={handleChange}
+                            />
+                            <label htmlFor="capacity">
+                                {memoryFieldLabels.capacity}
+                            </label>
+                        </div>
+                    </div>
+                    <div title={getTooltipByField("capacity")} className="col-1 d-flex align-items-start mt-1">
+                        <i className="bi bi-info-circle-fill tooltip-icon"></i>
+                    </div>
                 </div>
 
-                <div className="form-floating mb-3">
-                    <select
-                        className="form-select"
-                        id="modules"
-                        name="modules"
-                        value={memoryData.modules}
-                        onChange={handleChange}
-                    >
-                        <option value="">Select Module Configuration</option>
-                        {memoryModuleType.map((type) => (
-                            <option key={type} value={type}>
-                                {type}
-                            </option>
-                        ))}
-                    </select>
-                    <label htmlFor="modules">
-                        {memoryFieldLabels.modules}
-                    </label>
+                <div className="row">
+                    <div className="col-11">
+                        <div className="form-floating mb-3">
+                            <select
+                                className="form-select"
+                                id="modules"
+                                name="modules"
+                                value={memoryData.modules}
+                                onChange={handleChange}
+                            >
+                                <option value="">Select Module Configuration</option>
+                                {memoryModuleType.map((type) => (
+                                    <option key={type} value={type}>
+                                        {type}
+                                    </option>
+                                ))}
+                            </select>
+                            <label htmlFor="modules">
+                                {memoryFieldLabels.modules}
+                            </label>
+                        </div>
+                    </div>
+                    <div title={getTooltipByField("modules")} className="col-1 d-flex align-items-start mt-1">
+                        <i className="bi bi-info-circle-fill tooltip-icon"></i>
+                    </div>
                 </div>
 
-                <div className="form-floating mb-3">
-                    <input
-                        type="number"
-                        className="form-control"
-                        id="frequency"
-                        name="frequency"
-                        value={memoryData.frequency}
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="frequency">
-                        {memoryFieldLabels.frequency}
-                    </label>
+                <div className="row">
+                    <div className="col-11">
+                        <div className="form-floating mb-3">
+                            <input
+                                type="number"
+                                className="form-control"
+                                id="frequency"
+                                name="frequency"
+                                value={memoryData.frequency}
+                                onChange={handleChange}
+                            />
+                            <label htmlFor="frequency">
+                                {memoryFieldLabels.frequency}
+                            </label>
+                        </div>
+                    </div>
+                    <div title={getTooltipByField("frequency")} className="col-1 d-flex align-items-start mt-1">
+                        <i className="bi bi-info-circle-fill tooltip-icon"></i>
+                    </div>
                 </div>
 
-                <div className="form-floating mb-3">
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="casLatency"
-                        name="casLatency"
-                        value={memoryData.casLatency}
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="casLatency">
-                        {memoryFieldLabels.casLatency}
-                    </label>
+                <div className="row">
+                    <div className="col-11">
+                        <div className="form-floating mb-3">
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="casLatency"
+                                name="casLatency"
+                                value={memoryData.casLatency}
+                                onChange={handleChange}
+                            />
+                            <label htmlFor="casLatency">
+                                {memoryFieldLabels.casLatency}
+                            </label>
+                        </div>
+                    </div>
+                    <div title={getTooltipByField("casLatency")} className="col-1 d-flex align-items-start mt-1">
+                        <i className="bi bi-info-circle-fill tooltip-icon"></i>
+                    </div>
                 </div>
 
-                <div className="form-check form-switch mb-3">
-                    <input
-                        className="form-check-input"
-                        type="checkbox"
-                        id="heatSpreaderIncluded"
-                        name="heatSpreaderIncluded"
-                        checked={heatSpreaderChecked}
-                        value=""
-                        onChange={handleChange}
-                    />
-                    <label className="form-check-label" htmlFor="heatSpreaderIncluded">
-                        {memoryFieldLabels.heatSpreaderIncluded}
-                    </label>
+                <div className="row">
+                    <div className="col-11">
+                        <div className="form-check form-switch mb-3">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                id="heatSpreaderIncluded"
+                                name="heatSpreaderIncluded"
+                                checked={heatSpreaderChecked}
+                                value=""
+                                onChange={handleChange}
+                            />
+                            <label className="form-check-label" htmlFor="heatSpreaderIncluded">
+                                {memoryFieldLabels.heatSpreaderIncluded}
+                            </label>
+                        </div>
+                    </div>
+                    <div title={getTooltipByField("heatSpreaderIncluded")} className="col-1 d-flex align-items-start">
+                        <i className="bi bi-info-circle-fill tooltip-icon"></i>
+                    </div>
                 </div>
 
-                <div className="form-floating mb-3">
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="manufacturersWebsite"
-                        name="manufacturersWebsite"
-                        value={memoryData.manufacturersWebsite}
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="manufacturersWebsite">
-                        {productFieldLabels.manufacturersWebsite}
-                    </label>
+                <div className="row">
+                    <div className="col-11">
+                        <div className="form-floating mb-3">
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="manufacturersWebsite"
+                                name="manufacturersWebsite"
+                                value={memoryData.manufacturersWebsite}
+                                onChange={handleChange}
+                            />
+                            <label htmlFor="manufacturersWebsite">
+                                {productFieldLabels.manufacturersWebsite}
+                            </label>
+                        </div>
+                    </div>
+                    <div title={getTooltipByField("manufacturersWebsite")}
+                         className="col-1 d-flex align-items-start mt-1">
+                        <i className="bi bi-info-circle-fill tooltip-icon"></i>
+                    </div>
                 </div>
 
-                <div className="form-floating mb-3">
-                    <textarea
-                        className="form-control"
-                        id="additionalInfo"
-                        name="additionalInfo"
-                        value={memoryData.additionalInfo}
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="additionalInfo">
-                        {productFieldLabels.additionalInfo}
-                    </label>
+                <div className="row">
+                    <div className="col-11">
+                        <div className="form-floating mb-3">
+                            <textarea
+                                className="form-control"
+                                id="additionalInfo"
+                                name="additionalInfo"
+                                value={memoryData.additionalInfo}
+                                onChange={handleChange}
+                            />
+                            <label htmlFor="additionalInfo">
+                                {productFieldLabels.additionalInfo}
+                            </label>
+                        </div>
+                    </div>
+                    <div title={getTooltipByField("additionalInfo")} className="col-1 d-flex align-items-start mt-1">
+                        <i className="bi bi-info-circle-fill tooltip-icon"></i>
+                    </div>
                 </div>
+
                 <button type="submit" className="btn btn-primary">
                     Submit
                 </button>
