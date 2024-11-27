@@ -1,6 +1,5 @@
 // src/services/httpService.ts
-
-const BASE_URL = 'http://localhost:5000/api'; // Replace with your API URL
+const BASE_URL = process.env.API_URL || 'http://localhost:5000/api';
 
 // Create a custom error class to handle API errors
 class HttpError extends Error {
